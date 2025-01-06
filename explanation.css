@@ -1,0 +1,40 @@
+.background-img{
+    background-image: url(assets/background.jpg);
+    background-size: cover;
+}
+/* .explanation {}*/
+.rule {
+    font-size: 150px;
+    text-align: center;
+    margin-top: 1px;
+}
+.box {
+    border: solid 7px;
+    width: auto;
+    height: 700px;
+    margin:0 50px;
+}
+.text {
+    font-size: 50px;
+}
+
+@media screen and (max-width:768px){
+    .rule {
+        font-size: 40px;
+        text-align: center;
+        margin-top: 1px;
+    }
+
+    .text {
+        font-size: 24px;
+    }
+
+    .box {
+        border: solid 4px;
+        width: auto;
+        height: 768px;
+        margin: 0 50px;
+    }
+
+
+}

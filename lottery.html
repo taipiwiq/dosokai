@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>宝くじの抽選</title>
+    <style>
+        body {
+            background-image: url(R2.jpg);
+        }
+        #lotteryResult {
+            font-size: 150px;
+            font-weight: bold;
+            letter-spacing: 10px;
+            text-align: center;
+        }
+        #startButton {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            position: absolute;
+            left: 45%;
+            margin-top: 10%;
+            font-size: 50px;
+        }
+
+        .start {
+            text-align: center;
+            font-size: 150px;
+            color: red;
+        }
+
+        .lotteryNumber {
+            display: inline-block;
+            width: 300px;
+            position: relative;
+            left: 25px;
+            margin-right: 80px;
+            background-color: #000000;
+        }
+
+        @media screen and (max-width:768px) {
+            .start {
+                text-align: center;
+                font-size: 75px;
+                color: red;
+            }
+        
+            #lotteryResult {
+                font-size: 40px;
+                font-weight: bold;
+                margin-top: 50%;
+                text-align: center;
+                display: flex;
+            }
+
+            #startButton {
+                margin-top: 20px;
+                padding: 10px 20px;
+                font-size: 16px;
+                cursor: pointer;
+                position: absolute;
+                left: 30%;
+                margin-top: 40%;
+                font-size: 30px;
+            }
+
+            .lotteryNumber {
+                display: inline-block;
+                width: 300px;
+                position: relative;
+                left: 20px;
+                margin-right: 50px;
+                background-color: #000000;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1 class="start">抽選結果</h1>
+    <div id="lotteryResult">
+        <span class="lotteryNumber">?</span>
+        <span class="lotteryNumber">?</span>
+        <span class="lotteryNumber">?</span>
+        <span class="lotteryNumber">?</span>
+    </div>
+    <button id="startButton">抽選開始</button>
+
+    <script>
+    var soundEffect = new Audio('assets/soundEffect.mp3');
+    var clickCount = 0;  // ボタンが押された回数
+
+    // ランダムな4桁の数字を生成
+    function generateRandomFourDigitNumber() {
+        const randomNumber = Math.floor(Math.random() * 9000) + 1000;
+        return randomNumber;
+    }
+
+    // ランダムな色を生成
+    function getRandomColor() {
+        const letters = '123456789ABCDEF';
+        let color = '#';
+        for (let i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
+
+    // クリック回数に応じた最終結果を設定
+    function getFinalResult() {
+        // クリック回数に応じて異なる数字を生成
+        if (clickCount === 1) {
+            return [1, 1, 9, 2];
+        } else if (clickCount === 2) {
+            return [3, 7, 3, 8];
+        } else if (clickCount === 3) {
+            return [9, 0, 8, 5];
+        } else if (clickCount === 4) {
+            return [7, 1, 4, 9];
+        } else if (clickCount === 5) {
+            return [7, 7, 4, 6];
+        } else{
+            return generateRandomFourDigitNumber().toString().split('').map(Number); // 4桁のランダムな数字
+        }
+    }
+
+    function startLottery() {
+        const resultElement = document.getElementById("lotteryResult");
+        const numbers = resultElement.getElementsByClassName("lotteryNumber");
+        let count = 0;
+
+        let interval = setInterval(() => {
+            soundEffect.play();
+            
+            for (let i = 0; i < numbers.length; i++) {
+                // ランダムな数字を表示
+                numbers[i].textContent = Math.floor(Math.random() * 10); // 0〜9のランダムな数字
+                numbers[i].style.color = getRandomColor(); // ランダムな色
+            }
+            count++;
+
+            // 5秒後に抽選を停止して最終結果を表示
+            if (count >= 23) {
+                clearInterval(interval);
+                const finalNumber = getFinalResult(); // クリック回数に応じた最終結果を取得
+                // 最終結果を表示
+                for (let i = 0; i < finalNumber.length; i++) {
+                    numbers[i].textContent = finalNumber[i];  // 最終結果の数字
+                    numbers[i].style.color = getRandomColor(); // ランダムな色
+                }
+            }
+        }, 100); // 0.1秒ごとに数字を更新
+    }
+
+    document.getElementById("startButton").addEventListener("click", function() {
+        clickCount++;  // ボタンが押された回数をカウント
+        startLottery(); // 抽選開始
+    });
+    </script>
+</body>
+</html>
